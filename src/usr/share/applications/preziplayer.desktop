@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=preziPlayer
+GenericName=prezi Player
+X-GNOME-FullName=prezi Player
+Comment=
+Type=Application
+Categories=Graphics;GTK;
+Exec=preziplayer
+TryExec=preziplayer
+Terminal=false
+StartupNotify=true
+Icon=/usr/share/pixmaps/preziplayer.png

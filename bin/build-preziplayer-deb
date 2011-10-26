@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+
+###
+### main
+###
+BASE_PATH=$(dirname ${0})
+cd "$BASE_PATH/.."
+
+PACKAGE=$(grep '^Package:' ./src/DEBIAN/control | sed -e 's/^Package:\s*//')
+VERSION=$(grep '^Version:' ./src/DEBIAN/control | sed -e 's/^Version:\s*//')
+DEBNAME="${PACKAGE}-${VERSION}_i386"
+
+__cleanup() {
+  # remove symbolic link
+  rm -f "./${DEBNAME}"
+}
+
+# activate cleanup procedure
+trap __cleanup 0 1 2 9 15 17 19 23
+
+# create symbolic link for packet creation
+ln -s ./src "./${DEBNAME}"
+
+# build package
+dpkg-deb --build "./${DEBNAME}"
+

@@ -1,0 +1,9 @@
+Package: preziplayer
+Version: 1.0-1
+Section: graphics
+Priority: optional
+Architecture: all
+Essential: no
+Maintainer: Tom Freudenberg, 4commerce technologies AG, Hamburg, Germany
+Description: Offline presentation player for prezi.com
+Depends: zenity, weborf, zip, unzip
