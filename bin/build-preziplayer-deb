@@ -7,17 +7,27 @@
 BASE_PATH=$(dirname ${0})
 cd "$BASE_PATH/.."
 
-PACKAGE=$(grep '^Package:' ./src/DEBIAN/control | sed -e 's/^Package:\s*//')
-VERSION=$(grep '^Version:' ./src/DEBIAN/control | sed -e 's/^Version:\s*//')
-DEBNAME="${PACKAGE}-${VERSION}_i386"
+__get_control_value() {
+  # $1 = name of Option and Variable
+  eval ${1}=$(grep "^${1}:" ./src/DEBIAN/control | sed -e "s/^${1}:\s*//")
+}
+
+__get_control_value Package
+__get_control_value Version
+__get_control_value Architecture
+
+DEBNAME="${Package}-${Version}_${Architecture}"
 
 __cleanup() {
+  # deactivate cleanup
+  trap - 0 1 2 3 6 15 EXIT
+
   # remove symbolic link
   rm -f "./${DEBNAME}"
 }
 
 # activate cleanup procedure
-trap __cleanup 0 1 2 9 15 17 19 23
+trap __cleanup 0 1 2 3 6 15 EXIT
 
 # create symbolic link for packet creation
 ln -s ./src "./${DEBNAME}"
