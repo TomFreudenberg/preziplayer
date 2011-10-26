@@ -61,6 +61,9 @@ __error() {
 ### cleanup procedure used by trap
 ###
 __cleanup() {
+  # deactivate trap
+  trap - 0 1 2 3 6 15 EXIT
+
   # check running weborf
   if [[ ${WEB_PID} -gt 0 ]]; then
     kill -15 ${WEB_PID}
@@ -102,7 +105,7 @@ __initialize() {
   fi
 
   # from now we we remove finally all created temp
-  trap __cleanup 0 1 2 9 15 17 19 23
+  trap __cleanup 0 1 2 3 6 15 EXIT
 }
 
 
