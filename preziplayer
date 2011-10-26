@@ -1,0 +1,268 @@
+#!/bin/bash
+#
+# prezi player
+# by Tom Freudenberg, 4commerce technologies AG, Hamburg, Germany
+# http://www.4commerce.de
+#
+# created in october 2011
+
+
+###
+### Global vars
+###
+PREZI_ZIP=""
+PREZI_DIR=""
+PREZI_TMP=""
+SHRINKED_SUF="shrinked.zip"
+WEB_PID=-1
+WEB_PORT=12345
+
+
+###
+###
+###
+__info() {
+  # $1 = Message
+  zenity --info --title="prezi Player" --text="$1"
+}
+
+
+###
+###
+###
+__error() {
+  # $1 = Errorcode (optional)
+  # $2 = Message
+
+  # check given params
+  if [ "$2" != "" ]; then
+    strMSG="$2"
+  else
+    strMSG="$1"
+  fi
+
+  # show info
+  zenity --error --title="prezi Player - Error" --text="$strMSG"
+
+  # check if we need to exit (two params were given)
+  if [ "$2" != "" ]; then
+    exit $1
+  fi
+}
+
+
+###
+### this is our cleanup procedure
+###
+__cleanup() {
+  # check running weborf
+  if [ $WEB_PID -gt 0 ]; then
+    kill -15 $WEB_PID
+  fi;
+
+  # remove temporary environment
+  if [ ! -z "$PREZI_TMP" -a -d "$PREZI_TMP" ]; then
+    rm -rf "$PREZI_TMP"
+  fi
+}
+
+
+###
+###
+###
+__initialize() {
+  # check some tools we need
+
+  # first of all our gui output :-)
+  if [ ! `which zenity` ]; then
+    echo "Oops, sorry! We are some End-User-Tool and for this we like to use a GUI output with zenity."
+    echo "You can install with: apt-get install zenity"
+    exit 1
+  fi
+
+  # tiny webserver
+  if [ ! `which weborf` ]; then
+    __error 1 'Oops, sorry! To run a prezzi presentation we need some tiny webservice.\n\nPlease install "weborf", you can use:\n\napt-get install weborf'
+  fi
+
+  # zip util
+  if [ ! `which zip` ]; then
+    __error 1 'Oops, sorry! To run a prezzi presentation we need some tools.\n\nPlease install "zip", you can use:\n\napt-get install zip'
+  fi
+
+  # unzip util
+  if [ ! `which unzip` ]; then
+    __error 1 'Oops, sorry! To run a prezzi presentation we need some tools.\n\nPlease install "unzip", you can use:\n\napt-get install unzip'
+  fi
+
+  # from now we we remove finally all created temp
+  trap __cleanup 0 1 2 9 15 17 19 23
+}
+
+
+###
+### Create temporary working area
+###
+__mktemp() { 
+  # generate a random temp directory
+  PREZI_TMP=`mktemp -q -d --suffix=.prezi`
+  if [ ! "$?" -eq 0 ]; then
+    __error 1 'Sorry, could not create TMP directory.'
+  fi;
+}
+
+
+###
+###
+###
+__welcome() {
+  # a warm welcome ;-)
+  __info 'Welcome to prezzi offline player.\n\nPlease start with your downloaded zip file. Presentation will start as local mini website.\n\nHave fun.'
+  if [[ ! "$?" -eq 0 ]]; then
+    exit 1
+  fi
+}
+
+
+###
+###
+###
+__select_prezi() {
+  # try to get a filename
+  PREZI_ZIP=`zenity --file-selection --file-filter="prezi presentation zip (*.zip)|*.zip" --file-filter="All files (*.*)|*"`
+  # check dialog result
+  if [ ! "$?" -eq 0 ]; then
+     __error 1 "Abort! No presentation was selected."
+  fi
+
+  if [ ! -f "$PREZI_ZIP" -o ! -r "$PREZI_ZIP" ]; then
+    __error 1 'Could not access or open "$PREZI_ZIP"'
+  fi;
+}
+
+
+###
+### unzip and prepare presentation environment
+###
+__build_prezi_env() {
+
+  __mktemp
+
+  # Unzip prezi content to TMP
+  unzip -q -d "$PREZI_TMP" "$PREZI_ZIP"
+  if [ ! "$?" -eq 0 ]; then
+    __error 1 'Sorry, could not extract content from zip: "$PREZI_ZIP"'
+  fi;
+
+  # get prezi container
+  PREZI_DIR=`find "$PREZI_TMP" -mindepth 1 -maxdepth 1 -type d`
+  if [ ! -d "$PREZI_DIR" ]; then
+    __error 1 'Sorry, unknown content in zip: "$PREZI_ZIP"'
+  fi;
+
+  # link movie.swf to base directory
+  find "$PREZI_DIR" -type f -name 'movie.swf' -exec ln -s "{}" "$PREZI_DIR/presentation.swf" \;
+  if [ ! -L "$PREZI_DIR/presentation.swf" ]; then
+    __error 1 'Sorry, could not get index flash file movie.swf from "$PREZI_ZIP"'
+  fi;
+}
+
+
+###
+###
+###
+__run_webserver() {
+  # $1 = Port to use
+
+  # Run Webserver as new process
+  weborf -p $1 -b "$PREZI_DIR" -I presentation.swf >/dev/null &
+
+  # get pid to inspect and cleanup
+  WEB_PID=$!
+}
+
+
+###
+###
+###
+__shrink_zip() {
+  # info message
+  __info "A copy of your presentation will now be shrinked. Please click OK and be patient for moment."
+  if [ ! "$?" -eq 0 ]; then
+    return
+  fi
+
+  # create a copy for this
+  cp "$PREZI_ZIP" "$PREZI_ZIP.$SHRINKED_SUF"
+
+  # we will shrink the presentation by removing unused content like windows or mac player
+  zip -q -d "$PREZI_ZIP.$SHRINKED_SUF" "*/prezi.exe" "*/prezi.app/*/Info.plist" "*/prezi.app/*/PkgInfo" "*/MacOS/*" "*/prezi.app/*/Resources/*.lproj/*" "*/prezi.app/*/Resources/*.icns" "*/prezi.app/*/Resources/*.rsrc"
+
+  if [ ! "$?" -eq 0 ]; then
+    __error "Could not shrink zip at location:\n\n$PREZI_ZIP.$SHRINKED_SUF"
+  else
+    __info "A copy of your presentation has been stored at location:\n\n$PREZI_ZIP.$SHRINKED_SUF"
+  fi
+}
+
+
+###
+###
+###
+__open_browser() {
+  # info message
+  __info "Your browser will now be directed to your offline presentation. Please click OK and look at your browser."
+
+  # start defaut web browser and direct to presentation
+  xdg-open "http://localhost:$WEB_PORT"
+}
+
+
+###
+###
+###
+__menu() {
+
+  while [ 1 ]; do
+    ACTION=`zenity --title="prezi Player" \\
+                   --text="Presentation is available on localhost.\nPlease select your action and choose OK.\n" \\
+                   --list --radiolist \\
+                   --height="300" \\
+                   --column="" --column="Id" --column="Select action" --print-column=2 --hide-column=2 \\
+                   FALSE open_browser "Open browser" \\
+                   FALSE shrink_zip "Shrink zip file" \\
+                   FALSE end_presentation "End presentation" \\
+    ` # do not remove 
+    if [ "$?" -eq 0 ]; then
+      case "$ACTION" in
+        "open_browser")
+           __open_browser
+           ;;
+        "shrink_zip")
+           __shrink_zip
+           ;;
+        "end_presentation")
+           exit 0;
+           ;;
+      esac
+    fi
+  done
+}
+
+
+###
+### MAIN
+###
+
+__initialize
+
+__welcome
+
+__select_prezi
+
+__build_prezi_env
+
+__run_webserver $WEB_PORT
+
+__menu
+
