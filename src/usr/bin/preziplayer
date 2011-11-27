@@ -4,7 +4,8 @@
 # by Tom Freudenberg, 4commerce technologies AG, Hamburg, Germany
 # http://www.4commerce.de
 #
-# created in october 2011
+# created: october 2011
+# updated: november 2011 
 
 
 ###
@@ -13,7 +14,9 @@
 # port to use for tiny web server
 WEB_PORT=12345
 # name of index to start presentation
-WEB_INDEX="presentation.swf"
+WEB_INDEX="presentation.html"
+# name of index to start presentation
+MOVIE_INDEX="presentation.swf"
 # suffix to append to shrinked zip files
 SHRINKED_SUF="shrinked.zip"
 
@@ -122,6 +125,28 @@ __mktemp() {
 
 
 ###
+### simple html template to create a content
+###
+__mkhtmlcontainer() {
+  # $1 = name of movie file
+
+  # cat content to temp as html index file
+  cat <<!EOF
+<html>
+  <head>
+    <title>prezi player - offline presentation</title>
+  </head>
+  <body>
+    <object data="${1}" type="application/x-shockwave-flash" id="prezi" width="100%" height="98%"
+            style="visibility: visible; width: 100%; height: 98%; left: auto; top: auto; margin: 0 auto;"
+    />
+  </body>
+</html>
+!EOF
+}
+
+
+###
 ### simple welcome
 ###
 __welcome() {
@@ -170,10 +195,17 @@ __build_prezi_env() {
   fi;
 
   # link movie.swf to base directory and index file
-  find "${PREZI_DIR}" -type f -name 'movie.swf' -exec ln -s "{}" "${PREZI_DIR}/${WEB_INDEX}" \;
-  if [[ ! -L "${PREZI_DIR}/${WEB_INDEX}" ]]; then
+  find "${PREZI_DIR}" -type f -name 'movie.swf' -exec ln -s "{}" "${PREZI_DIR}/${MOVIE_INDEX}" \;
+  if [[ ! -L "${PREZI_DIR}/${MOVIE_INDEX}" ]]; then
     __error 1 "Sorry, could not get index flash file movie.swf from [${PREZI_ZIP}]"
   fi;
+
+  # create html container
+  __mkhtmlcontainer ${MOVIE_INDEX} > "${PREZI_DIR}/${WEB_INDEX}"
+  if [[ ! -f "${PREZI_DIR}/${WEB_INDEX}" ]]; then
+    __error 1 "Sorry, could not create [${WEB_INDEX}] index file in: [${PREZI_DIR}]"
+  fi;
+
 }
 
 
