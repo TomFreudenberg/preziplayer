@@ -30,8 +30,12 @@ __cleanup() {
 trap __cleanup 0 1 2 3 6 15 EXIT
 
 # create symbolic link for packet creation
+rm -f "./${DEBNAME}"
 ln -s ./src "./${DEBNAME}"
 
+# remove previous generated package
+rm -f "./${DEBNAME}.deb"
+
 # build package
-dpkg-deb --build "./${DEBNAME}"
+fakeroot dpkg-deb --build "./${DEBNAME}"
 

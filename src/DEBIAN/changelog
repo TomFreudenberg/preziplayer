@@ -1,6 +1,12 @@
+preziplayer (1.0-3) stable; urgency=low
+
+  * prezi Player for Ubuntu: fixing file owner settings
+
+-- Tom Freudenberg (4commerce technologies AG)   Mon, 05 Dec 2011 23:45:00 +0100
+
 preziplayer (1.0-2) stable; urgency=low
 
   * prezi Player for Ubuntu
 
--- Tom Freudenberg (4commerce technologies AG)   Sun, 27 Nov 2010 22:00:00 +0100
+-- Tom Freudenberg (4commerce technologies AG)   Sun, 27 Nov 2011 22:00:00 +0100
 
