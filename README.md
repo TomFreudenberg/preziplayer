@@ -2,7 +2,7 @@
 
 > View offline presentation from prezi.com, easy and gui
 
-## First introduction
+## first introduction
 
 You can take a first look by visiting http://prezi.com/5w9yvnnzmnir/prezi-player-on-linux/.
 
