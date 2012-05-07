@@ -1,3 +1,11 @@
+preziplayer (1.0-4) stable; urgency=low
+
+  * Fix changes of zenity in Ubuntu 12.04
+  * Improve launching default browser
+  * Fix handling of tmp stuff when using Ubuntu 10.04
+
+-- Tom Freudenberg (4commerce technologies AG)   Mon, 07 May 2012 08:00:00 +0200
+
 preziplayer (1.0-3) stable; urgency=low
 
   * prezi Player for Ubuntu: fixing file owner settings

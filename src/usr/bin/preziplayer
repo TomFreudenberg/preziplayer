@@ -5,7 +5,7 @@
 # http://www.4commerce.de
 #
 # created: october 2011
-# updated: november 2011 
+# updated: may 2012
 
 
 ###
@@ -117,10 +117,19 @@ __initialize() {
 ###
 __mktemp() { 
   # generate a random temp directory
-  PREZI_TMP=$(mktemp -q -d --suffix=".prezi")
+  PREZI_TMP=$(mktemp -q -d)
   if [[ ! "$?" -eq 0 ]]; then
     __error 1 'Sorry, could not create TMP directory.'
   fi;
+  
+  # in case that option --suffix to mktemp is not available overall
+  # we do an informal renaming by ourself
+  TMP_RENAME=$(mv "${PREZI_TMP}" "${PREZI_TMP}.prezi")
+
+  # save the new tmp location after successful renaming
+  if [[ "$?" -eq 0 ]]; then
+    PREZI_TMP="${PREZI_TMP}.prezi"
+  fi
 }
 
 
@@ -251,11 +260,22 @@ __shrink_zip() {
 ### use default browser to show presentation (must handle Flash)
 ###
 __open_browser() {
-  # info message
-  __info "Your browser will now be directed to your offline presentation. Please click OK and look at your browser."
+  # build URI
+  URI="http://localhost:${WEB_PORT}"
 
-  # start defaut web browser and direct to presentation
-  xdg-open "http://localhost:${WEB_PORT}"
+  # info message
+  __info "Your browser will now be directed to your offline presentation.\nLaunching ${URI}.\n\nPlease click OK and look at your browser."
+
+  # check method to launch browser
+  CMD_OPTION=$(which x-www-browser)
+
+  if [[ "$?" -eq 0 ]]; then
+    # on Debian / alternative based systems call x-www-browser
+    x-www-browser "${URI}"
+  else
+    # start defaut web browser on freedesktop systems
+    xdg-open "${URI}"
+  fi
 }
 
 
@@ -274,7 +294,10 @@ __menu() {
                     FALSE shrink_zip "Shrink zip file" \
                     FALSE end_presentation "End presentation" \
     ) # do not remove 
-    if [[ "$?" -eq 0 ]]; then
+
+    # check that an option was selected, followed by pressing OK
+    # CANCEL will left an empty option
+    if [[ -n "${OPTION}" ]]; then
       case "${OPTION}" in
         "open_browser")
            __open_browser
