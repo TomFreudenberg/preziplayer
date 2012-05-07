@@ -2,6 +2,10 @@
 
 > View offline presentation from prezi.com, easy and gui
 
+## First introduction
+
+You can take a first look by visiting http://prezi.com/5w9yvnnzmnir/prezi-player-on-linux/.
+
 ## usage
 
 Just run "preziplayer" from shell or use "prezi Player" icon in Graphics menu when using debian installer
