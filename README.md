@@ -6,8 +6,8 @@
 
 You can take a first look by visiting:
 
- [en] http://prezi.com/5w9yvnnzmnir/prezi-player-on-linux/
- [fr] http://prezi.com/6of6xauy2o23/lecteur-prezi-offline-sous-linux/
+* http://prezi.com/5w9yvnnzmnir/prezi-player-on-linux/ [en]
+* http://prezi.com/6of6xauy2o23/lecteur-prezi-offline-sous-linux/ [fr]
 
 ## usage
 
