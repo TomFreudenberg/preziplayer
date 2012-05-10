@@ -4,7 +4,10 @@
 
 ## first introduction
 
-You can take a first look by visiting http://prezi.com/5w9yvnnzmnir/prezi-player-on-linux/.
+You can take a first look by visiting:
+
+ [en] http://prezi.com/5w9yvnnzmnir/prezi-player-on-linux/
+ [fr] http://prezi.com/6of6xauy2o23/lecteur-prezi-offline-sous-linux/
 
 ## usage
 
