@@ -13,7 +13,7 @@
 ### Global constants
 ###
 # port to use for tiny web server
-WEB_PORT=12346
+WEB_PORT=12345
 # name of index to start presentation
 WEB_INDEX="presentation.html"
 # name of index to start presentation
