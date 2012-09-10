@@ -158,9 +158,9 @@ __mkhtmlcontainer() {
       input { vertical-align: middle; }
 
       #wrapper {
-	background: #fff;
-	width: 900px;
-	margin: 40px auto 20px;
+        background: #fff;
+        width: 900px;
+        margin: 40px auto 20px;
         -webkit-border-radius: 15px;
         border-radius: 15px;
       }
