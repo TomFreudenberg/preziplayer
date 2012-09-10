@@ -5,21 +5,25 @@
 # http://www.4commerce.de
 #
 # created: october 2011
-# updated: may 2012
+# updated: august 2012
+# github:  https://github.com/TomFreudenberg/preziplayer
 
 
 ###
 ### Global constants
 ###
 # port to use for tiny web server
-WEB_PORT=12345
+WEB_PORT=12346
 # name of index to start presentation
 WEB_INDEX="presentation.html"
 # name of index to start presentation
 MOVIE_INDEX="presentation.swf"
 # suffix to append to shrinked zip files
 SHRINKED_SUF="shrinked.zip"
-
+# base to installation share
+PREZI_SHARE="/usr/share/preziplayer"
+# name of favicon
+FAVICON="favicon.ico"
 
 ###
 ### Global vars
@@ -144,11 +148,48 @@ __mkhtmlcontainer() {
 <html>
   <head>
     <title>prezi player - offline presentation</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <style type="text/css">
+      * {margin: 0; padding: 0; }
+      body {font: 13px/18px sans-serif, Verdana, Helvetica, Arial, Tahoma; width: 100%; background: #EAEAE2; }
+      a, a:link, a:hover, a:active, a:visited { color: #666; outline: none; text-decoration: none; }
+      p { margin: 0 0 18px; }
+      img { border: none; }
+      input { vertical-align: middle; }
+
+      #wrapper {
+	background: #fff;
+	width: 900px;
+	margin: 40px auto 20px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+      }
+
+      #content-top, #content-bottom { height: 20px; }
+      #content { height: 500px; }
+
+      #footer { margin-bottom: 30px; }
+      #footer p { text-align: center; }
+    </style>
   </head>
   <body>
-    <object data="${1}" type="application/x-shockwave-flash" id="prezi" width="100%" height="98%"
-            style="visibility: visible; width: 100%; height: 98%; left: auto; top: auto; margin: 0 auto;"
-    />
+    <div id="wrapper">
+      <div id="content-top"></div>
+      <div id="content">
+        <div id="player">
+          <object id="prezi" width="100%" height="100%" style="visibility: visible; width: 100%; height: 100%; left: auto; top: auto; margin: 0 auto;" >
+            <embed id="preziobj" width="100%" height="100%" flashvars="aspect-ratio-guide" bgcolor="#ffffff" 
+                   allowscriptaccess="always" allowfullscreeninteractive="true" allowfullscreen="true" 
+                   type="application/x-shockwave-flash" src="${1}" />
+          </object>
+        </div>
+      </div>
+      <div id="content-bottom"></div>
+    </div>
+
+    <div id="footer">
+      <p><a href="https://github.com/TomFreudenberg/preziplayer/wiki"><strong>prezi player</strong> - written by Tom Freudenberg - @github.com</a></p>
+    </div>
   </body>
 </html>
 !EOF
@@ -160,7 +201,7 @@ __mkhtmlcontainer() {
 ###
 __welcome() {
   # a warm welcome ;-)
-  __info 'Welcome to prezzi offline player.\n\nPlease start with your downloaded zip file. Presentation will start as local mini website.\n\nHave fun.'
+  __info 'Welcome to prezzi offline player.\n\nPlease start with your downloaded zip file.\nPresentation will start as local mini website.\n\nHave fun.'
   if [[ ! "$?" -eq 0 ]]; then
     exit 1
   fi
@@ -206,13 +247,21 @@ __build_prezi_env() {
   # link movie.swf to base directory and index file
   find "${PREZI_DIR}" -type f -name 'movie.swf' -exec ln -s "{}" "${PREZI_DIR}/${MOVIE_INDEX}" \;
   if [[ ! -L "${PREZI_DIR}/${MOVIE_INDEX}" ]]; then
-    __error 1 "Sorry, could not get index flash file movie.swf from [${PREZI_ZIP}]"
+    __error 1 "Sorry, could not get index flash file movie.swf from: [${PREZI_ZIP}]"
   fi;
 
   # create html container
   __mkhtmlcontainer ${MOVIE_INDEX} > "${PREZI_DIR}/${WEB_INDEX}"
   if [[ ! -f "${PREZI_DIR}/${WEB_INDEX}" ]]; then
     __error 1 "Sorry, could not create [${WEB_INDEX}] index file in: [${PREZI_DIR}]"
+  fi;
+
+  # link prezi.favicon.ico to base directory
+  if [[ -d "${PREZI_SHARE}" ]]; then
+    find "${PREZI_SHARE}" -type f -name '*.ico' -exec ln -s "{}" "${PREZI_DIR}/${FAVICON}" \;
+  fi;
+  if [[ ! -L "${PREZI_DIR}/${FAVICON}" ]]; then
+    __error "Warning, favicon is missing at: [${PREZI_SHARE}]"
   fi;
 
 }

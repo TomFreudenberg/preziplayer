@@ -1,3 +1,10 @@
+preziplayer (1.0-5) stable; urgency=low
+
+  * Improve html starter page - now fullscreen is available and nicer template
+  * Fix some typos
+
+-- Tom Freudenberg (4commerce technologies AG)   Sun, 09 Oct 2012 12:00:00 +0200
+
 preziplayer (1.0-4) stable; urgency=low
 
   * Fix changes of zenity in Ubuntu 12.04
