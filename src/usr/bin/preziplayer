@@ -20,6 +20,8 @@ WEB_INDEX="presentation.html"
 MOVIE_INDEX="presentation.swf"
 # suffix to append to shrinked zip files
 SHRINKED_SUF="shrinked.zip"
+# suffix to append to webspace zip files
+WEBSPACE_SUF="webspace.zip"
 # base to installation share
 PREZI_SHARE="/usr/share/preziplayer"
 # name of favicon
@@ -55,7 +57,7 @@ __error() {
   # $2 = Message
 
   # show info
-  zenity --error --title="prezi Player - Error" --text="${2:-${1}}"
+  zenity --error --title="$(eval_gettext 'prezi Player - Error')" --text="${2:-${1}}"
 
   # check if we need to exit (two params were given)
   if [[ "${2}" != "" ]]; then
@@ -89,26 +91,37 @@ __cleanup() {
 __initialize() {
   # check some tools we need
 
+  # enabled internationalization GNU gettext
+  export TEXTDOMAIN="$(basename ${0})"
+  
+  # check for GNU Text
+  if [[ ! $(which gettext.sh) ]]; then
+    echo -e "Oops. sorry! To run a prezzi presentation we need some internationalization tools.\nPlease install [gettext], you can use: apt-get install gettext"
+    exit 1
+  else
+  # source gettext
+    . gettext.sh >/dev/null 2>&1
+  fi
+
   # first of all our gui output :-)
   if [[ ! $(which zenity) ]]; then
-    echo "Oops, sorry! We are some End-User-Tool and for this we like to use a GUI output with zenity."
-    echo "You can install with: apt-get install zenity"
+    echo -e "$(eval_gettext 'Oops, sorry! We are some End-User-Tool and for this we like to use a GUI output with zenity.\nPlease install [zenity], you can use: apt-get install zenity')"
     exit 1
   fi
 
   # tiny webserver
   if [[ ! $(which weborf) ]]; then
-    __error 1 'Oops, sorry! To run a prezzi presentation we need some tiny webservice.\n\nPlease install "weborf", you can use:\n\napt-get install weborf'
+    __error 1 "$(eval_gettext 'Oops, sorry! To run a prezzi presentation we need some tiny webservice.\n\nPlease install [weborf], you can use:\n\napt-get install weborf')"
   fi
 
   # zip util
   if [[ ! $(which zip) ]]; then
-    __error 1 'Oops, sorry! To run a prezzi presentation we need some tools.\n\nPlease install "zip", you can use:\n\napt-get install zip'
+    __error 1 "$(eval_gettext 'Oops, sorry! To run a prezzi presentation we need some tools.\n\nPlease install [zip], you can use:\n\napt-get install zip')"
   fi
 
   # unzip util
   if [[ ! $(which unzip) ]]; then
-    __error 1 'Oops, sorry! To run a prezzi presentation we need some tools.\n\nPlease install "unzip", you can use:\n\napt-get install unzip'
+    __error 1 "$(eval_gettext 'Oops, sorry! To run a prezzi presentation we need some tools.\n\nPlease install [unzip], you can use:\n\napt-get install unzip')"
   fi
 
   # from now we we remove finally all created temp
@@ -123,7 +136,7 @@ __mktemp() {
   # generate a random temp directory
   PREZI_TMP=$(mktemp -q -d)
   if [[ ! "$?" -eq 0 ]]; then
-    __error 1 'Sorry, could not create TMP directory.'
+    __error 1 "$(eval_gettext 'Sorry, could not create TMP directory.')"
   fi;
   
   # in case that option --suffix to mktemp is not available overall
@@ -201,7 +214,7 @@ __mkhtmlcontainer() {
 ###
 __welcome() {
   # a warm welcome ;-)
-  __info 'Welcome to prezzi offline player.\n\nPlease start with your downloaded zip file.\nPresentation will start as local mini website.\n\nHave fun.'
+  __info "$(eval_gettext 'Welcome to prezzi offline player.\n\nPlease start with your downloaded zip file.\nPresentation will start as local mini website.\n\nHave fun.')"
   if [[ ! "$?" -eq 0 ]]; then
     exit 1
   fi
@@ -213,14 +226,14 @@ __welcome() {
 ###
 __select_prezi() {
   # try to get a filename
-  PREZI_ZIP=$(zenity --file-selection --file-filter="prezi presentation zip (*.zip)|*.zip" --file-filter="All files (*.*)|*")
+  PREZI_ZIP=$(zenity --title="$(eval_gettext 'Select your prezi presentation')" --file-selection --file-filter="prezi zip (*.zip)|*.zip" --file-filter="All files (*.*)|*")
   # check dialog result
   if [[ ! "$?" -eq 0 ]]; then
-     __error 1 "Abort! No presentation was selected."
+     __error 1 "$(eval_gettext 'Abort! No presentation was selected.')"
   fi
 
   if [[ ! -f "${PREZI_ZIP}" ]] || [[ ! -r "${PREZI_ZIP}" ]]; then
-    __error 1 "Could not access or open [${PREZI_ZIP}]"
+    __error 1 "$(printf "$(eval_gettext 'Sorry, could not access or open: [%s]')" ${PREZI_ZIP})"
   fi;
 }
 
@@ -235,33 +248,33 @@ __build_prezi_env() {
   # Unzip prezi content to TMP
   unzip -q -d "${PREZI_TMP}" "${PREZI_ZIP}"
   if [[ ! "$?" -eq 0 ]]; then
-    __error 1 "Sorry, could not extract content from zip: [${PREZI_ZIP}]"
+    __error 1 "$(printf "$(eval_gettext 'Sorry, could not extract content from zip: [%s]')" ${PREZI_ZIP})"
   fi;
 
   # get prezi container
   PREZI_DIR=$(find "${PREZI_TMP}" -mindepth 1 -maxdepth 1 -type d)
   if [[ ! -d "${PREZI_DIR}" ]]; then
-    __error 1 "Sorry, unknown content in zip: [${PREZI_ZIP}]"
+    __error 1 "$(printf "$(eval_gettext 'Sorry, unknown content in zip: [%s]')" ${PREZI_ZIP})"
   fi;
 
   # link movie.swf to base directory and index file
   find "${PREZI_DIR}" -type f -name 'movie.swf' -exec ln -s "{}" "${PREZI_DIR}/${MOVIE_INDEX}" \;
   if [[ ! -L "${PREZI_DIR}/${MOVIE_INDEX}" ]]; then
-    __error 1 "Sorry, could not get index flash file movie.swf from: [${PREZI_ZIP}]"
+    __error 1 "$(printf "$(eval_gettext 'Sorry, could not locate flash file movie.swf from: [%s]')" ${PREZI_ZIP})"
   fi;
 
   # create html container
   __mkhtmlcontainer ${MOVIE_INDEX} > "${PREZI_DIR}/${WEB_INDEX}"
   if [[ ! -f "${PREZI_DIR}/${WEB_INDEX}" ]]; then
-    __error 1 "Sorry, could not create [${WEB_INDEX}] index file in: [${PREZI_DIR}]"
+    __error 1 "$(printf "$(eval_gettext 'Sorry, could not create [%s] index file at: [%s]')" ${WEB_INDEX} ${PREZI_DIR})"
   fi;
 
-  # link prezi.favicon.ico to base directory
+  # copy prezi.favicon.ico to base directory
   if [[ -d "${PREZI_SHARE}" ]]; then
-    find "${PREZI_SHARE}" -type f -name '*.ico' -exec ln -s "{}" "${PREZI_DIR}/${FAVICON}" \;
+    find "${PREZI_SHARE}" -type f -name '*.ico' -exec cp "{}" "${PREZI_DIR}/${FAVICON}" \;
   fi;
-  if [[ ! -L "${PREZI_DIR}/${FAVICON}" ]]; then
-    __error "Warning, favicon is missing at: [${PREZI_SHARE}]"
+  if [[ ! -f "${PREZI_DIR}/${FAVICON}" ]]; then
+    __error "$(printf "$(eval_gettext 'Warning, favicon is missing at: [%s]')" ${PREZI_SHARE})"
   fi;
 
 }
@@ -286,7 +299,7 @@ __run_webserver() {
 ###
 __shrink_zip() {
   # info message
-  __info "A copy of your presentation will now be shrinked. Please click OK and be patient for moment."
+  __info "$(eval_gettext 'A copy of your presentation will now be shrinked.\nPlease click OK and be patient for a moment.')"
   if [[ ! "$?" -eq 0 ]]; then
     return
   fi
@@ -298,9 +311,39 @@ __shrink_zip() {
   zip -q -d "${PREZI_ZIP}.${SHRINKED_SUF}" "*/prezi.exe" "*/prezi.app/*/Info.plist" "*/prezi.app/*/PkgInfo" "*/MacOS/*" "*/prezi.app/*/Resources/*.lproj/*" "*/prezi.app/*/Resources/*.icns" "*/prezi.app/*/Resources/*.rsrc"
 
   if [[ ! "$?" -eq 0 ]]; then
-    __error "Could not shrink zip at location:\n\n[${PREZI_ZIP}.${SHRINKED_SUF}]"
+    __error "$(printf "$(eval_gettext 'Sorry, could not shrink zip at location:\n\n [%s]')" "${PREZI_ZIP}.${SHRINKED_SUF}")"
   else
-    __info "A copy of your presentation has been stored at location:\n\n[${PREZI_ZIP}.${SHRINKED_SUF}]"
+    __info "$(printf "$(eval_gettext 'A copy of your presentation has been stored at location:\n\n [%s]')" "${PREZI_ZIP}.${SHRINKED_SUF}")"
+  fi
+}
+
+
+###
+### utility to create a webspace archive to publish prezi presentations on private webspace
+###
+__webspace_zip() {
+  # info message
+  __info "$(eval_gettext 'An archive of your presentation will now be prepared for your webspace.\nPlease click OK and be patient for a moment.')"
+  if [[ ! "$?" -eq 0 ]]; then
+    return
+  fi
+
+  # first we will prepare the presentation by removing unused content like windows or mac player
+  find "${PREZI_TMP}" -iregex '.*/\(prezi\.exe\|prezi\.app/.*/\(Info\.plist\|PkgInfo\|Resources/.*\.\(lproj\|icns\|rsrc\)\)\|MacOS\|_CodeSignature\)' -prune -exec rm -rf "{}" \;
+
+  if [[ ! "$?" -eq 0 ]]; then
+    __error "$(printf "$(eval_gettext 'Sorry, could not prepare zip content at location:\n\n [%s]')" "${PREZI_ZIP}.${WEBSPACE_SUF}")"
+  fi
+
+  # now repack for private webspace
+  cd "${PREZI_DIR}"
+  rm -rf "${PREZI_ZIP}.${WEBSPACE_SUF}"
+  zip -pr "${PREZI_ZIP}.${WEBSPACE_SUF}" "."
+
+  if [[ ! "$?" -eq 0 ]]; then
+    __error "$(printf "$(eval_gettext 'Sorry, could not prepare zip content at location:\n\n [%s]')" "${PREZI_ZIP}.${WEBSPACE_SUF}")"
+  else
+    __info "$(printf "$(eval_gettext 'A copy of your presentation has been stored at location:\n\n [%s]')" "${PREZI_ZIP}.${WEBSPACE_SUF}")"
   fi
 }
 
@@ -313,7 +356,7 @@ __open_browser() {
   URI="http://localhost:${WEB_PORT}"
 
   # info message
-  __info "Your browser will now be directed to your offline presentation.\nLaunching ${URI}.\n\nPlease click OK and look at your browser."
+  __info "$(printf "$(eval_gettext 'Your browser will now be directed to your offline presentation.\nLaunching [%s].\n\nPlease click OK and look at your browser.')" ${URI})"
 
   # check method to launch browser
   CMD_OPTION=$(which x-www-browser)
@@ -335,13 +378,14 @@ __menu() {
 
   while [[ 1 ]]; do
     OPTION=$(zenity --title="prezi Player" \
-                    --text="Presentation is available on localhost.\nPlease select your action and choose OK.\n" \
+                    --text="$(eval_gettext 'Please select your action and choose OK.\n\nPresentation is available on localhost.\nCancel will always loop until you select an action.\n')" \
                     --list --radiolist \
                     --height="300" \
-                    --column="" --column="Id" --column="Select action" --print-column=2 --hide-column=2 \
-                    FALSE open_browser "Open browser" \
-                    FALSE shrink_zip "Shrink zip file" \
-                    FALSE end_presentation "End presentation" \
+                    --column="" --column="Id" --column="$(eval_gettext 'Select action')" --print-column=2 --hide-column=2 \
+                    FALSE open_browser "$(eval_gettext 'Open browser')" \
+                    FALSE shrink_zip "$(eval_gettext 'Shrink zip file')" \
+                    FALSE webspace_zip "$(eval_gettext 'Create zip for webspace')" \
+                    FALSE end_prezi_player "$(eval_gettext 'End prezi player')" \
     ) # do not remove 
 
     # check that an option was selected, followed by pressing OK
@@ -354,7 +398,10 @@ __menu() {
         "shrink_zip")
            __shrink_zip
            ;;
-        "end_presentation")
+        "webspace_zip")
+           __webspace_zip
+           ;;
+        "end_prezi_player")
            exit 0;
            ;;
       esac

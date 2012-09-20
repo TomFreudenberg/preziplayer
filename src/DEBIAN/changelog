@@ -1,3 +1,10 @@
+preziplayer (1.0-6) stable; urgency=low
+
+  * New option to repack presentation for private webspace
+  * Client localization - english and german included now
+
+-- Tom Freudenberg (4commerce technologies AG)   Sun, 16 Oct 2012 12:00:00 +0200
+
 preziplayer (1.0-5) stable; urgency=low
 
   * Improve html starter page - now fullscreen is available and nicer template

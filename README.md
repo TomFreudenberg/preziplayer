@@ -25,6 +25,8 @@ You can generate a .deb package by entering
 
 ## changelog
 
+* 2012-09-16 (1.0-6): New Option to repack presentation for private webspace
+* 2012-09-16 (1.0-6): Client localization - english and german included now
 * 2012-09-09 (1.0-5): Added new template for start html - Fullscreen available now and nicer CSS
 * 2012-05-07 (1.0-4): Fix changes of zenity in Ubuntu 12.04
 * 2012-05-07 (1.0-4): Improve launching default browser
