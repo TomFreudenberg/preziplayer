@@ -10,7 +10,7 @@ msgstr ""
 "POT-Creation-Date: 2012-09-16 12:00+0200\n"
 "PO-Revision-Date: 2012-09-16 12:00+0200\n"
 "Last-Translator: TOM FREUDENBERG <preziplayer [at] 4commerce [dot] de>\n"
-"Language: GERMAN\n"
+"Language: DUTCH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: preziplayer:60
 #, sh-format
 msgid "prezi Player - Error"
-msgstr "prezi Player - Fehler"
+msgstr ""
 
 #: preziplayer:107
 #, sh-format
@@ -26,145 +26,145 @@ msgid ""
 "Oops, sorry! We are some End-User-Tool and for this we like to use a GUI "
 "output with zenity.\\nPlease install [zenity], you can use: apt-get install "
 "zenity"
-msgstr "Ups! Dies ist ein Anwender-Tool und benötigt GUI Unterstützung.\\nBitte [zenity] installieren mit Hilfe von: apt-get install zenity"
+msgstr ""
 
 #: preziplayer:113
 #, sh-format
 msgid ""
 "Oops, sorry! To run a prezzi presentation we need some tiny webservice.\\n"
 "\\nPlease install [weborf], you can use:\\n\\napt-get install weborf"
-msgstr "Ups! Es wird ein einfacher Webserver benötigt.\\n\\nBitte [weborf] installieren mit Hilfe von:\\n\\napt-get install weborf"
+msgstr ""
 
 #: preziplayer:118
 #, sh-format
 msgid ""
 "Oops, sorry! To run a prezzi presentation we need some tools.\\n\\nPlease "
 "install [zip], you can use:\\n\\napt-get install zip"
-msgstr "Ups! Es fehlen wichtige Tools für die Erstellung der Offline-Präsentation.\\n\\nBitte [zip] installieren mit Hilfe von:\\n\\napt-get install zip"
+msgstr ""
 
 #: preziplayer:123
 #, sh-format
 msgid ""
 "Oops, sorry! To run a prezzi presentation we need some tools.\\n\\nPlease "
 "install [unzip], you can use:\\n\\napt-get install unzip"
-msgstr "Ups! Es fehlen wichtige Tools für die Erstellung der Offline-Präsentation.\\n\\nBitte [unzip] installieren mit Hilfe von:\\n\\napt-get install unzip"
+msgstr ""
 
 #: preziplayer:138
 #, sh-format
 msgid "Sorry, could not create TMP directory."
-msgstr "Ups, die Erstellung des TMP Verzeichnisses ist nicht möglich."
+msgstr ""
 
 #: preziplayer:216
 #, sh-format
 msgid ""
 "Welcome to prezzi offline player.\\n\\nPlease start with your downloaded zip "
 "file.\\nPresentation will start as local mini website.\\n\\nHave fun."
-msgstr "Willkommen beim prezzi offline player.\\n\\nBitte wählen Sie Ihre herunter geladene zip-Datei.\\nDie Präsentation wird als lokale Mini-Webseite gestartet.\\n\\nViel Erfolg."
+msgstr ""
 
 #: preziplayer:229
 #, sh-format
 msgid "Select your prezi presentation"
-msgstr "Prezi Präsentation auswählen"
+msgstr ""
 
 #: preziplayer:231
 #, sh-format
 msgid "Abort! No presentation was selected."
-msgstr "Abbruch! Keine Präsentation ausgewählt."
+msgstr ""
 
 #: preziplayer:235
 #, sh-format
 msgid "Sorry, could not access or open: [%s]"
-msgstr "Ups, Datei nicht verfügbar oder Zugriff verboten auf: [%s]"
+msgstr ""
 
 #: preziplayer:251
 #, sh-format
 msgid "Sorry, could not extract content from zip: [%s]"
-msgstr "Ups, Inhalt der zip-Datei kann nicht abgespeichert: [%s]"
+msgstr ""
 
 #: preziplayer:257
 #, sh-format
 msgid "Sorry, unknown content in zip: [%s]"
-msgstr "Ups, Inhalt der zip-Datei scheint unbekannt: [%s]"
+msgstr ""
 
 #: preziplayer:263
 #, sh-format
 msgid "Sorry, could not locate flash file movie.swf from: [%s]"
-msgstr "Ups, die Flash Datei movie.swf ist nicht auffindbar in: [%s]"
+msgstr ""
 
 #: preziplayer:269
 #, sh-format
 msgid "Sorry, could not create [%s] index file at: [%s]"
-msgstr "Ups, Erstellung der index-Datei [%s] kann nicht erstellt werden unter: [%s]"
+msgstr ""
 
 #: preziplayer:277
 #, sh-format
 msgid "Warning, favicon is missing at: [%s]"
-msgstr "Warnung, die favicon-Datei ist nicht verfügbar unter: [%s]"
+msgstr ""
 
 #: preziplayer:302
 #, sh-format
 msgid ""
 "A copy of your presentation will now be shrinked.\\nPlease click OK and be "
 "patient for a moment."
-msgstr "Eine Kopie der Präsentation wird jetzt verkleinert.\\nBitte bestätigen Sie mit OK und haben einen Moment Geduld."
+msgstr ""
 
 #: preziplayer:314
 #, sh-format
 msgid "Sorry, could not shrink zip at location:\\n\\n [%s]"
-msgstr "Ups, die zip-Datei kann nicht verkleinert werden:\\n\\n [%s]"
+msgstr ""
 
 #: preziplayer:316 preziplayer:346
 #, sh-format
 msgid "A copy of your presentation has been stored at location:\\n\\n [%s]"
-msgstr "Eine aufbereitete Kopie der Präsentation wurde bereitgestellt unter:\\n\\n [%s]"
+msgstr ""
 
 #: preziplayer:326
 #, sh-format
 msgid ""
 "An archive of your presentation will now be prepared for your webspace."
 "\\nPlease click OK and be patient for a moment."
-msgstr "Ein Archiv für die eigene Webseite wird jetzt vorbereitet.\\nBitte bestätigen Sie mit OK und haben einen Moment Geduld."
+msgstr ""
 
 #: preziplayer:335 preziplayer:344
 #, sh-format
 msgid "Sorry, could not prepare zip content at location:\\n\\n [%s]"
-msgstr "Ups, die zip-Datei kann nicht vorbereitet werden:\\n\\n [%s]"
+msgstr ""
 
 #: preziplayer:359
 #, sh-format
 msgid ""
 "Your browser will now be directed to your offline presentation.\\nLaunching "
 "[%s].\\n\\nPlease click OK and look at your browser."
-msgstr "Der Browser wird jetzt mit der Offline-Präsentation geöffnet.\\nStart [%s].\\n\\nBitte bestätigen Sie mit OK und wechseln dann zu Ihrer Browser-Anwendung."
+msgstr ""
 
 #: preziplayer:381
 #, sh-format
 msgid ""
 "Please select your action and choose OK.\\n\\nPresentation is available on "
 "localhost.\\nCancel will always loop until you select an action.\\n"
-msgstr "Bitte wählen Sie die Funktion aus und bestätigen mit OK.\\n\\nPräsentation ist lokal auf localhost verfügbar.\\nDie Wahl von Abbruch wiederholt das Menü bis eine Funktion ausgewählt wird."
+msgstr ""
 
 #: preziplayer:384
 #, sh-format
 msgid "Select action"
-msgstr "Auswahl"
+msgstr ""
 
 #: preziplayer:385
 #, sh-format
 msgid "Open browser"
-msgstr "Browser öffnen"
+msgstr ""
 
 #: preziplayer:386
 #, sh-format
 msgid "Shrink zip file"
-msgstr "zip-Datei verkleinern"
+msgstr ""
 
 #: preziplayer:387
 #, sh-format
 msgid "Create zip for webspace"
-msgstr "zip-Archiv für eigene Webseite"
+msgstr ""
 
 #: preziplayer:388
 #, sh-format
 msgid "End prezi player"
-msgstr "prezi player beenden"
+msgstr ""
