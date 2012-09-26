@@ -11,17 +11,35 @@ You can take a first look by visiting:
 
 ## usage
 
-Just run "preziplayer" from shell or use "prezi Player" icon in Graphics menu when using debian installer
+Just run "preziplayer" from shell or use "prezi Player" icon in Graphics menu when using .deb package
 
 ## description
 
 You will find additional information at [Wiki](preziplayer/wiki)
 
-## installation
+## community
+
+There is a Facebook page at:
+
+* https://www.facebook.com/preziplayer
+
+## download
+
+You can download latest .deb packages at
+
+* https://github.com/TomFreudenberg/preziplayer/downloads
+
+## build
 
 You can generate a .deb package by entering
 
     bin/build-preziplayer-deb
+
+## installation
+
+You can install the .deb package by entering
+
+    dpkg -i preziplayer-(release)_all.deb
 
 ## changelog
 
