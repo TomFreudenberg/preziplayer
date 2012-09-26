@@ -7,6 +7,12 @@
 BASE_PATH=$(dirname ${0})
 cd "$BASE_PATH/.."
 
+__set_control_value() {
+  # $1 = name of Option
+  # $2 = value of Option
+  sed --in-place -e "s/^\(${1}:\s*\).*$/\1${2}/" ./src/DEBIAN/control
+}
+
 __get_control_value() {
   # $1 = name of Option and Variable
   eval ${1}=$(grep "^${1}:" ./src/DEBIAN/control | sed -e "s/^${1}:\s*//")
@@ -35,6 +41,9 @@ ln -s ./src "./${DEBNAME}"
 
 # remove previous generated package
 rm -f "./${DEBNAME}.deb"
+
+# set value of Installed-Size
+__set_control_value Installed-Size $(du -s --exclude="./src/DEBIAN*" ./src | sed -e 's/^\([0-9]\+\).*$/\1/')
 
 # build package
 fakeroot dpkg-deb --build "./${DEBNAME}"
