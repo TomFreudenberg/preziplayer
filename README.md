@@ -41,7 +41,7 @@ You can generate a .deb package by entering:
 
 You can install the .deb package by entering:
 
-    dpkg -i preziplayer-(release)_all.deb
+    sudo dpkg -i preziplayer-(release)_all.deb
 
 ## changelog
 
