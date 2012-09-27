@@ -7,6 +7,7 @@
 You can have a first introduction and take a look at: 
 
 * http://prezi.com/5w9yvnnzmnir/prezi-player-on-linux/ [en]
+* http://prezi.com/j8ey10frvz5x/prezi-player-on-linux-installation/ [en]
 * http://prezi.com/6of6xauy2o23/lecteur-prezi-offline-sous-linux/ [fr]
 
 ## usage
@@ -18,6 +19,12 @@ Just run "preziplayer" from shell or use "prezi Player" icon in Graphics menu wh
 You will find additional information at:
 
 * [Wiki](preziplayer/wiki)
+
+## Screenshots
+
+We have produced a few screenshots of running and installing PreziPlayer at:
+
+* [Screenshots](preziplayer/wiki/Screenshots)
 
 ## community
 
