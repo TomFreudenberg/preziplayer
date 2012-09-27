@@ -1,6 +1,6 @@
 # preziplayer
 
-[[preziplayer/wiki/images/assets/preziplayer_tux.png]]
+[[/TomFreudenberg/preziplayer/wiki/images/assets/preziplayer_tux.png]]
 
 **View offline presentation from prezi.com, easy and with gui**
 
