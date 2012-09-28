@@ -20,7 +20,7 @@ You will find additional information at:
 
 * [Wiki](preziplayer/wiki)
 
-## Screenshots
+## screenshots
 
 We have produced a few screenshots of running and installing PreziPlayer at:
 
