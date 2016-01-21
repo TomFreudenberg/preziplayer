@@ -253,7 +253,7 @@ __welcome() {
 ###
 __select_prezi() {
   # try to get a filename
-  PREZI_ZIP=$(zenity --title="$(eval_gettext 'Select your prezi presentation')" --file-selection --file-filter="prezi zip (*.zip)|*.zip" --file-filter="All files (*.*)|*")
+  PREZI_ZIP="$(zenity --title="$(eval_gettext 'Select your prezi presentation')" --file-selection --file-filter="prezi zip (*.zip)|*.zip" --file-filter="All files (*.*)|*")"
   # check dialog result
   if [[ ! "$?" -eq 0 ]]; then
      __error 1 "$(eval_gettext 'Abort! No presentation was selected.')"
